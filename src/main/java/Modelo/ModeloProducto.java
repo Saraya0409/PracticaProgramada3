@@ -9,16 +9,16 @@ package Modelo;
  * @author yagoa
  */
 public class ModeloProducto {
-    private int id;
-    private int cantidad;
+    private int idProducto;
     private String nombre;
     private double precio;
+    private int cantidad;
 
-    public ModeloProducto(int id, int cantidad, String nombre, double precio) {
-        this.id = id;
-        this.cantidad = cantidad;
+    public ModeloProducto(int idProducto, String nombre, double precio, int cantidad) {
+        this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
+        this.cantidad = cantidad;
     }
 
     public int getCantidad() {
@@ -28,16 +28,18 @@ public class ModeloProducto {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+  
+
     
 
-
-
-    public int getId() {
-        return id;
+  
+    public int getIdProducto() {
+        return idProducto;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
     }
 
     public String getNombre() {

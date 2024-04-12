@@ -9,28 +9,58 @@ package Modelo;
  * @author yagoa
  */
 public class FuncionarioModelo {
-   private String nombreUsuario;
-   private String Contraseña;
+     private int idFuncionario;
+    private String nombre;
+    private String apellido;
+    private String correo;
+    private String contraseña;
 
-    public FuncionarioModelo(String nombreUsuario, String Contraseña) {
-        this.nombreUsuario = nombreUsuario;
-        this.Contraseña = Contraseña;
+    public FuncionarioModelo(int idFuncionario, String nombre, String apellido, String correo, String contraseña) {
+        this.idFuncionario = idFuncionario;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correo = correo;
+        this.contraseña = contraseña;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public int getIdFuncionario() {
+        return idFuncionario;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setIdFuncionario(int idFuncionario) {
+        this.idFuncionario = idFuncionario;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getContraseña() {
-        return Contraseña;
+        return contraseña;
     }
 
-    public void setContraseña(String Contraseña) {
-        this.Contraseña = Contraseña;
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
    
    

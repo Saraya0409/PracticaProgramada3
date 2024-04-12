@@ -4,11 +4,16 @@
  */
 package Controlador;
 
-import Modelo.ModeloPrudctoBD;
+import Modelo.ConexionBDModelo;
+import Modelo.ModeloProducto;
+import Vista.VistaProductos;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import Vista.VistaProductos;
 
 /**
  *
@@ -16,57 +21,72 @@ import Vista.VistaProductos;
  */
 public class ControladorProducto {
 
-    private ModeloPrudctoBD modelo;
+    private ConexionBDModelo conexionDB;
 
     public ControladorProducto() {
-        this.modelo = new ModeloPrudctoBD();
+        this.conexionDB = new ConexionBDModelo(); 
     }
 
-    public ResultSet consultarProductos() {
-        // Consultar productos utilizando el modelo
-        return modelo.consultarProductos();
-    }
+    
+    public boolean añadirProducto(ModeloProducto producto) {
+        Connection conn = conexionDB.conectar();
+        String sql = "INSERT INTO Producto (nombre, precio) VALUES (?, ?)";
 
-    public DefaultTableModel obtenerProductos() {
-        ResultSet rs = modelo.consultarProductos();
-        DefaultTableModel modeloTabla = new DefaultTableModel();
-
-        try {
-            while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                double precio = rs.getDouble("precio");
-                int id = rs.getInt("id");
-                int cantidad = rs.getInt("cantidad");
-                modeloTabla.addRow(new Object[]{nombre, precio, id, cantidad});
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, producto.getNombre());
+            statement.setDouble(2, producto.getPrecio());
+            
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-
-        return modeloTabla;
+        return false;
     }
 
-    public void agregarProductoACarrito(int filaSeleccionadaIndex, VistaProductos vista) {
-        Object[] filaSeleccionada = vista.obtenerFilaSeleccionada();
-        if (filaSeleccionada != null) {
-            String nombre = (String) filaSeleccionada[0];
-            double precio = (double) filaSeleccionada[1];
-            int id = (int) filaSeleccionada[2];
-            int cantidad = (int) filaSeleccionada[3];
+    
+    public List<ModeloProducto> listarProductos() {
+        List<ModeloProducto> productos = new ArrayList<>();
+        Connection conn = conexionDB.conectar();
+        String sql = "SELECT * FROM Producto";
 
-            if (cantidad <= 0) {
-                vista.mostrarMensaje("El producto seleccionado está agotado.");
-                return;
-            }
+        try (PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
-            if (modelo.actualizarCantidadProducto(id, cantidad - 1)) {
-                vista.mostrarMensaje("Se ha agregado '" + nombre + "' al carrito.");
-                vista.llenarTablaProductos();
-            } else {
-                vista.mostrarMensaje("Error al actualizar la cantidad del producto en la base de datos.");
+            while (resultSet.next()) {
+                ModeloProducto producto = new ModeloProducto(
+                        resultSet.getInt("id_producto"),
+                        resultSet.getString("nombre"),
+                        resultSet.getDouble("precio"),
+                        resultSet.getInt("cantidad")
+                );
+                productos.add(producto);
             }
-        } else {
-            vista.mostrarMensaje("Por favor seleccione un producto.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
+        return productos;
+    }
+
+    public DefaultTableModel obtenerProductos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void agregarProductoACarrito(int filaSeleccionada, VistaProductos aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
